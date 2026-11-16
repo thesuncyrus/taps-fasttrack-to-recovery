@@ -9,3 +9,19 @@ data/
 outputs/
 artifacts/
 *.rds
+
+# Local data, models and generated evaluation artifacts
+data/
+outputs/
+artifacts/
+runs/
+*.rds
+*.RData
+*.pt
+*.joblib
+*.parquet
+private-*
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/

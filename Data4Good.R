@@ -1,9 +1,9 @@
 ################################################################################
 # Lab #2 answer key
 #
-# This assignment we will focus on applying what we have learned on the Data4Good 
+# This assignment we will focus on applying what we have learned on the Data4Good
 # case challenge. Bookmark these two links so you can easily find them later.
-# 
+#
 # Competition: https://www.kaggle.com/competitions/the-purdue-data-4-good-case-competition-2024/overview
 # Data Dictionary: https://docs.google.com/document/d/125pj9rUnRPTFCeq8MMrg1SSIeadfOwSrllFsWGDJ8HY/edit#heading=h.cghzriyx7fje
 ################################################################################
@@ -24,8 +24,8 @@
 # Kaggle website. Also, you can find additional details about the problem from
 # the Kickoff call from Dr. Chantel Dooley (https://bit.ly/2024data4good). Next,
 # read through the INFORMS CAP JTA 7 Domains task (slide 18 in Data Mining
-# Overview slides). For the six tasks listed provide a thoughtful but concise 
-# response for each task. Usually, at the beginning on your project as you go 
+# Overview slides). For the six tasks listed provide a thoughtful but concise
+# response for each task. Usually, at the beginning on your project as you go
 # through your process you may not have a fully developed idea/answer. However,
 # your goal is to continue to ask the right questions and seek out information
 # to ensure you're working on the right problem, for the right people, in the
@@ -52,21 +52,21 @@
 ################################################################################
 # Data
 # Q5:
-# Review the six Data tasks in the table. Next we will begin to work on some of 
+# Review the six Data tasks in the table. Next we will begin to work on some of
 # those tasks.
 ################################################################################
 # Data understanding and cleanup
 #
-# Q6 (1 point): 
+# Q6 (1 point):
 # Read in the examples.csv kaggle dataset using the read.table() function.
 # It should be in R as a data.frame called 'd'.
 getwd()
 # Portfolio copy: input files are read from the current working directory.
 d <- read.table(file="examples.csv", header=T, sep=",")
 
-# Q7 (1 point): 
+# Q7 (1 point):
 # Save the test.csv file from Kaggle as an Excel .xlsx spreadsheet. Read in
-# Excel file using the read_xlsx() function. It should be in R as a data.frame 
+# Excel file using the read_xlsx() function. It should be in R as a data.frame
 # called 'test'.
 library(readxl)
 test <- read_xlsx(path="test.xlsx", sheet="test", col_names=T, range="A1:W2951")
@@ -78,16 +78,16 @@ names(d)
 names(test)
 ################################################################################
 # Most of our potential input (X) variables are Likert-scale type responses that
-# have an order to them (thus ordinal) but not all. Read through the survey 
-# questions (link above in script). We see 
+# have an order to them (thus ordinal) but not all. Read through the survey
+# questions (link above in script). We see
 # > questions 1 and 2 have no inherit order (nominal)
 # > questions 3-6 are:
 #      0. Disagree
 #      1. Neither agree nor disagree
-#      2. Agree 
+#      2. Agree
 # > questions 7-8 are:
 #      0. Extremely likely / Very likely
-#      1. Somewhat likely 
+#      1. Somewhat likely
 #      2. Neither likely nor unlikely / Neutral
 #      3. Somewhat unlikely
 #      4. Extremely unlikely / Not at all likely
@@ -101,35 +101,35 @@ names(test)
 #
 # > Our target variable (Y) are integer values 1-6 each indicating a major
 # stage in TAPS grief journey map. Pulled this directly from the kaggle site:
-# 1. "Immediate Grief, Shock & Emotion": Overwhelmed, loss of purpose; shock 
-#     and trauma emotions (isolation) present and challenging to understand. 
-#     Individuals may struggle to deal with family responsibilities alone. 
-#     Surviving Child: Feeling disconnected without guidance and attention from 
+# 1. "Immediate Grief, Shock & Emotion": Overwhelmed, loss of purpose; shock
+#     and trauma emotions (isolation) present and challenging to understand.
+#     Individuals may struggle to deal with family responsibilities alone.
+#     Surviving Child: Feeling disconnected without guidance and attention from
 #     grieving adults.
 # 2. "Navigating Family Relationships": Experiencing tension between individuals
-#     within the family unit; lack of support from family members. Surviving 
-#     Family Unit: Perception of other family members' grief experience. Each 
+#     within the family unit; lack of support from family members. Surviving
+#     Family Unit: Perception of other family members' grief experience. Each
 #     family member may be at different phases of their grief journey.
-# 3. "Learning to Process Grief": Experiencing grief and learning to process 
-#     those emotions. Surviving Child: Seeks guidance and acknowledgment of 
-#     grief; benefit from opportunities to open up and process with kids in 
+# 3. "Learning to Process Grief": Experiencing grief and learning to process
+#     those emotions. Surviving Child: Seeks guidance and acknowledgment of
+#     grief; benefit from opportunities to open up and process with kids in
 #     similar situations to normalize emotions.
-# 4. "Moments That Matter": Renewed experience of grief around anniversaries of 
-#     loss, holidays, and special moments. Surviving Family Unit: Navigating 
+# 4. "Moments That Matter": Renewed experience of grief around anniversaries of
+#     loss, holidays, and special moments. Surviving Family Unit: Navigating
 #     special moments (sports, school achievements, moments that matter).
 # 5. "Feeling Immersed, Connected & Seen": Finding new purpose and goals to begin
-#     moving towards Positive Integration. Surviving Family Unit: Connected to a 
-#     broader community; support system; not the only person/family experiencing 
+#     moving towards Positive Integration. Surviving Family Unit: Connected to a
+#     broader community; support system; not the only person/family experiencing
 #     loss.
-# 6. "New Growth & Purpose": Healthy point in grief journey; feeling capable to 
-#    help others and a desire to do so. Surviving Family Unit: Ready to give 
-#    back to the TAPS community through mentorship programs, volunteering at 
+# 6. "New Growth & Purpose": Healthy point in grief journey; feeling capable to
+#    help others and a desire to do so. Surviving Family Unit: Ready to give
+#    back to the TAPS community through mentorship programs, volunteering at
 #    charity drives & events, etc.
 ################################################################################
 # Now, when you framed your business problem into an analytics problem, you
 # might have decided it is a classification problem because our target variable
 # are classes (1, 2, ..., 6). That's indeed what this is. I want you to treat it
-# like so for now, and later you can consider "breaking the rules" or adding a 
+# like so for now, and later you can consider "breaking the rules" or adding a
 # bit of art with the science by trying to see if framing it as a regression-type
 # problem, or even trying to cluster into six groups helps improve your results.
 #
@@ -139,19 +139,19 @@ names(test)
 # 2 will likely remain as just factor vectors. Lets proceed in our first set
 # of experiments leaving 3-20 as numbers.
 ################################################################################
-# Q9 (1 point): 
+# Q9 (1 point):
 # we don't need Id column in examples data 'd' set so delete it
 d$Id <- NULL
 
-# Q10 (1 point): 
+# Q10 (1 point):
 # Make the target variable the first column in your examples data.frame, 'd'
 d <- d[,c(23,1:22)]
 
-# Q11 (1 point): 
+# Q11 (1 point):
 # Make target variable column name "y" in your examples data.frame, 'd'
 names(d)[1] <- "y"
 
-# Q12 (2 points): 
+# Q12 (2 points):
 # Use the str_trim() function from the stringr library to remove whitespace
 # on both the left and right side of columns q21 and q22 in BOTH the 'd' and
 # 'test' data.frames. One example is provided.
@@ -161,21 +161,21 @@ d$q22 <- str_trim(d$q22, side="both")
 test$q21 <- str_trim(test$q21, side="both")
 test$q22 <- str_trim(test$q22, side="both")
 
-# Q13 (2 points): 
-# use ifelse() to make actual missing cells NAs for columns q21 and q22 
+# Q13 (2 points):
+# use ifelse() to make actual missing cells NAs for columns q21 and q22
 # in BOTH the 'd' and 'test' data.frames. One example is provided.
 d$q21 <- ifelse(nchar(d$q21)==0,NA,d$q21)
 d$q22 <- ifelse(nchar(d$q22)==0,NA,d$q22)
 test$q21 <- ifelse(nchar(test$q21)==0,NA,test$q21)
 test$q22 <- ifelse(nchar(test$q22)==0,NA,test$q22)
 
-# Q14 (1 point): 
+# Q14 (1 point):
 # use the factor() function to create your 'y' target variable in 'd' as an
 # ordered factor vector
 str(d)
 d$y <- factor(d$y, ordered=T, levels=c("1","2","3","4","5","6"))
 
-# Q15 (1 point): 
+# Q15 (1 point):
 # use the as.factor() function to coerce/change q1 and q2 in both the 'd'
 # and 'test' data.frames to unordered factor vectors.
 d$q1 <- as.factor(d$q1)
@@ -183,10 +183,10 @@ d$q2 <- as.factor(d$q2)
 test$q1 <- as.factor(test$q1)
 test$q2 <- as.factor(test$q2)
 
-# Q16 (1 point): 
+# Q16 (1 point):
 # use the table() function to see the counts for (y, q1, and q2) in 'd' and
 # (q1 and q2) in 'test'. This is important to review because when you're using
-# one dataset (e.g., 'd') to train a model that will predict another dataset 
+# one dataset (e.g., 'd') to train a model that will predict another dataset
 # (e.g., 'test'), one dataset might not have observations for a certain factor
 # level and thus when you try to predict using that level it will give you an
 # error. To fix this in advance, within the ?as.factor() function you will see
@@ -214,21 +214,21 @@ library(ggplot2)
 
 # Figure 1: Reason to attend TAPS event (q1)
 p1 <- ggplot() + geom_bar(data=d, aes(x=factor(q1), fill=factor(y))
-                          , position="fill") 
+                          , position="fill")
 p1 <- p1 + guides(fill=guide_legend(title="Grief Stages"))
 # different coloring themes
 # http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually
 p1 <- p1 + scale_fill_brewer(palette="Reds")
 p1 <- p1 + labs(title = "Reason for Attendance by Grief Stage"
-                , x="Reason to attend TAPS event", y="Percent") 
+                , x="Reason to attend TAPS event", y="Percent")
 p1
 
 
 # Figure 2: How did you hear about TAPS (q2)
 library(stringr)
-p1 <- ggplot() + geom_bar(data=d, aes(x=factor(q1), position="fill")) 
+p1 <- ggplot() + geom_bar(data=d, aes(x=factor(q1), position="fill"))
 p1 <- p1 + labs(title = "Reason for Attendance by Grief Stage"
-                , x="Reason to attend TAPS event", y="Percent") 
+                , x="Reason to attend TAPS event", y="Percent")
 p1 <- p1 + theme(panel.background = element_rect(fill = "#67c9ff"),
                  plot.background = element_rect(fill = "gray86"),
                  plot.margin = margin(t = 1,  # Top margin
@@ -254,16 +254,16 @@ p1
 
 # Figure 3: How did you hear about TAPS (q2)
 p1 <- ggplot() + geom_bar(data=d, aes(x=factor(q2), fill=factor(y))
-                          , position="fill") 
+                          , position="fill")
 p1 <- p1 + guides(fill=guide_legend(title="Grief Stages"))
 # different coloring themes
 # http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually
 p1 <- p1 + scale_fill_brewer(palette="Reds")
 p1 <- p1 + labs(title = "How did you hear about TAPS by Grief Stage"
-                , x="How did you hear about TAPS", y="Percent") 
+                , x="How did you hear about TAPS", y="Percent")
 p1
 
-# Q17 (2 points): 
+# Q17 (2 points):
 # Explore various visualizations and summarizations to help you identify at least
 # two potentially strong relationships with what we are trying to predict. Only
 # show these two graphics in your submitted R script but you can keep the other
@@ -275,7 +275,7 @@ p1
 
 ################################################################################
 # Can we detect the language the comments are in?
-# Here I wrote a loop that created a new column in 'd' that detects what 
+# Here I wrote a loop that created a new column in 'd' that detects what
 # language the comments are in.
 ################################################################################
 library("textcat")
@@ -319,18 +319,18 @@ library(dplyr)
 q21 <- tibble(line=1:50, text=d$q21)
 q22 <- tibble(line=1:50, text=d$q22)
 
-# Q18 (1 point): 
-# Split a column into tokens using the tokenizers package, splitting the table 
-# into one-token-per-row for q21 and then q22 
+# Q18 (1 point):
+# Split a column into tokens using the tokenizers package, splitting the table
+# into one-token-per-row for q21 and then q22
 library(tidytext)
-q21 <- q21 %>% 
+q21 <- q21 %>%
           unnest_tokens(output=word, input=text)
 
 library(tidytext)
-q22 <- q22 %>% 
+q22 <- q22 %>%
   unnest_tokens(output=word, input=text)
 
-# Q19 (1 point): 
+# Q19 (1 point):
 # load the stop_words dictionary; note that you can always add words or remove
 # words to this if you like based on your own problems context/domain. Then
 # remove stop words from dataset for q21 and q22
@@ -344,15 +344,15 @@ q21 <- q21 %>%
 q22 <- q22 %>%
   anti_join(stop_words)
 
-# Q20 (1 point): 
+# Q20 (1 point):
 # find the most common words for q21 then q22
 q21 %>%
-  count(word, sort = TRUE) 
+  count(word, sort = TRUE)
 
 q22 %>%
-  count(word, sort = TRUE) 
+  count(word, sort = TRUE)
 
-# Q22 (1 point): 
+# Q22 (1 point):
 # Create a visual showing the most common words for q21 then q22
 library(ggplot2)
 q21 %>%
@@ -382,20 +382,20 @@ library(caret)
 str(d)
 names(d)
 
-# Q23 (1 point): 
+# Q23 (1 point):
 # Show how to identify correlated predictors with a correlation greater than
 # +/- 0.85. You may or may not need to remove some variables.
 descrCor <-  cor(d[,4:21])                           # correlation matrix
 highCorr <- sum(abs(descrCor[upper.tri(descrCor)]) > .85) # num Xs with cor > t
 summary(descrCor[upper.tri(descrCor)])                    # summarize the cors
 
-# Q24 (1 point): 
+# Q24 (1 point):
 # Identify and remove any features with limited variation. There may or may
 # not be any
 nzv <- nearZeroVar(d, saveMetrics = TRUE)
 d <- d[, c(TRUE,!nzv$zeroVar[2:ncol(d)])]
 
-# Q25 (1 point): 
+# Q25 (1 point):
 # Standardize your numeric features using a min-max normalization. Do this for
 # the 'd' data.frame, then the 'test' data.frame
 preProcValues <- preProcess(d[,4:21], method = c("range"))
@@ -409,9 +409,9 @@ test <- predict(preProcValues, test)
 levels(d$y) <- make.names(levels(factor(d$y)))
 levels(d$y)
 
-# Q26 (2 points): 
+# Q26 (2 points):
 # given the small size of our 'd' dataframe we will try leave-one-out cross
-# validation and not split the data into separate train and test. Specify 
+# validation and not split the data into separate train and test. Specify
 # you loocv cross-validation design in trainControl
 library(MLmetrics)
 set.seet(111)
@@ -421,7 +421,7 @@ ctrl <- trainControl(method="loocv",     # cross-validation set approach to use
                      summaryFunction = multiClassSummary, # for multi-classification
                      allowParallel=T)
 ?trainControl
-# train a multiple logistic regession on columns 4 thru 21 
+# train a multiple logistic regession on columns 4 thru 21
 myModel1 <- train(y ~ q4+q5+q6+q7+q8+q9+q10+q11+q12+q13+q14+q15+q16+q17+q18+q19+q20,
                   data = d,            # train set used to build model
                   method = "glmnet",   # glmnet is for multi-classification
@@ -430,16 +430,16 @@ myModel1 <- train(y ~ q4+q5+q6+q7+q8+q9+q10+q11+q12+q13+q14+q15+q16+q17+q18+q19+
 )
 myModel1
 
-# Q27 (1 point): 
+# Q27 (1 point):
 # generate estimated probabilities and predicted classes
 pred_probs <- predict(myModel1, newdata=d, type='prob')
 pred_classes <- predict(myModel1, newdata=d)
 
-# Q28 1 point): 
+# Q28 1 point):
 # use the confusionMatrix() function to generate model statistics
 (cm <- confusionMatrix(data=pred_classes, d$y))
 
-# Q29 (2 points): 
+# Q29 (2 points):
 # generate predictions on your 'test' set and download them as a csv file to
 # upload to kaggle for scoring
 preds <- predict(myModel1, newdata=test)

@@ -1,0 +1,11 @@
+name: taps-fasttrack-to-recovery
+channels:
+  - conda-forge
+dependencies:
+  - r-base=4.5.3
+  - r-randomforest
+  - r-rpart
+  - r-glmnet
+  - r-e1071
+  - r-nnet
+  - r-ggplot2
