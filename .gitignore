@@ -1,0 +1,11 @@
+.DS_Store
+__pycache__/
+*.pyc
+.Rhistory
+.RData
+.env
+.env.*
+data/
+outputs/
+artifacts/
+*.rds
