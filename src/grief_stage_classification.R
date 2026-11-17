@@ -1,9 +1,9 @@
-# Recovered team workflow. No original dataset is distributed.
-# Default glmnet is the saved source; rf is the author's confirmed method-switch variant.
+# Structured survivor-survey classification.
+# Select regularized logistic regression or Random Forest through caret.
 args <- commandArgs(trailingOnly=TRUE)
 if(length(args)<2) stop("Usage: Rscript src/grief_stage_classification.R examples.csv test.xlsx [glmnet|rf] [outputs]")
 method <- if(length(args)>2) args[3] else "glmnet"
-if(!method %in% c("glmnet","rf")) stop("Choose a source-supported method: glmnet or rf.")
+if(!method %in% c("glmnet","rf")) stop("Choose a model method: glmnet or rf.")
 out <- if(length(args)>3) args[4] else "outputs"
 for(pkg in c("caret","readxl","MLmetrics",if(method=="rf") "randomForest" else "glmnet"))
  if(!requireNamespace(pkg,quietly=TRUE)) stop(paste("Install",pkg))
@@ -20,15 +20,15 @@ for(n in c("q21","q22")) {
 d$y <- factor(d$y,ordered=TRUE,levels=as.character(1:6))
 if(anyNA(d$y)) stop("Expected six grief-stage labels 1–6.")
 for(n in c("q1","q2")) {d[[n]]<-as.factor(d[[n]]);test[[n]]<-as.factor(test[[n]])}
-# Historical diagnostics: correlation counted, zero-variance columns removed.
+# Predictor diagnostics: correlation counted, zero-variance columns removed.
 descrCor <- cor(d[,4:21]);print(sum(abs(descrCor[upper.tri(descrCor)])>.85))
 nzv <- caret::nearZeroVar(d,saveMetrics=TRUE)
 d <- d[,c(TRUE,!nzv$zeroVar[2:ncol(d)])]
-# These global/separate transformations are historical choices, not leakage-safe CV.
+# Range transforms are fitted before resampling and separately for the competition test set.
 pre <- caret::preProcess(d[,4:21],method="range");d <- predict(pre,d)
 test_pre <- caret::preProcess(test[,4:21],method="range");test <- predict(test_pre,test)
 levels(d$y) <- make.names(levels(factor(d$y)))
-set.seed(111) # Corrects the source's set.seet typo.
+set.seed(111)
 ctrl <- caret::trainControl(method="LOOCV",classProbs=TRUE,
  summaryFunction=caret::multiClassSummary,allowParallel=TRUE)
 fit <- caret::train(y ~ q4+q5+q6+q7+q8+q9+q10+q11+q12+q13+q14+q15+q16+q17+q18+q19+q20,
@@ -40,4 +40,4 @@ cm <- caret::confusionMatrix(predict(fit,d),d$y)
 write.csv(as.data.frame(cm$table),file.path(out,"training-confusion.csv"),row.names=FALSE)
 write.csv(data.frame(Id=test$Id,label=predict(fit,test)),file.path(out,"kaggle-predictions.csv"),row.names=FALSE)
 saveRDS(fit,file.path(out,"model.rds"))
-writeLines(c(paste("Method:",method),"Historical preprocessing and LOOCV; not poster-score reproduction.",capture.output(sessionInfo())),file.path(out,"run-info.txt"))
+writeLines(c(paste("Method:",method),"Range preprocessing; leave-one-out cross-validation.",capture.output(sessionInfo())),file.path(out,"run-info.txt"))

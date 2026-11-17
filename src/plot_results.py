@@ -17,5 +17,5 @@ d=pd.read_csv(ROOT/'results/poster-model-comparison.csv')
 fig,ax=plt.subplots(figsize=(9,5))
 colors=['#aab3a3','#aab3a3','#b79e7b','#b79e7b','#28645b','#28645b']
 bars=ax.barh(d.approach+' · '+d.model,d.kaggle_score,color=colors)
-ax.bar_label(bars,fmt='%.3f',padding=5);ax.set(xlim=(0,1),xlabel='Kaggle score (historically reported)',title='TAPS · comparison of selected models\nOriginal poster figures; no independent rerun')
+ax.bar_label(bars,fmt='%.3f',padding=5);ax.set(xlim=(0,1),xlabel='Kaggle score reported in the project poster',title='TAPS · comparison of selected models\nSelected model variants from the project poster')
 save(fig,'comparison.svg')

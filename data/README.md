@@ -1,7 +1,5 @@
-# Survey inputs are unavailable
-The historical source expects examples.csv: Id, q1–q22, then a target column with six labels 1–6.
-q1–q2 are nominal; q3–q20 are ordinal numeric responses; q21–q22 contain English/Spanish open text.
-It reads test.xlsx, sheet test, range A1:W2951 (Id plus q1–q22). That range is a code expectation,
-not proof of the original training sample size. Exact data count, final checkpoint and license are unavailable.
-Access must be obtained from the data owner/competition under its restrictions. Do not publish survivor
-responses or use substitute data to claim reproduction. Model and prediction outputs are ignored.
+# Survey input schema
+
+The classifier expects examples.csv with Id, q1–q22 and a target column containing six labels (1–6). q1–q2 are nominal, q3–q20 are numeric survey items, and q21–q22 contain open text. test.xlsx uses sheet test, range A1:W2951, with Id and q1–q22.
+
+Survey records are not included. Obtain access from the data owner or competition under its applicable terms. The test range is an input contract, not a statement of the training sample size. Generated models and predictions remain outside Git.

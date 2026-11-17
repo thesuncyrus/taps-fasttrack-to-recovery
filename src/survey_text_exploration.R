@@ -18,7 +18,7 @@ if("--translate-authorized" %in% args) {
 } else message("External translation skipped. Counts may mix languages; no equivalence is claimed.")
 dir.create("outputs",showWarnings=FALSE)
 for(n in c("q21","q22")) {
- # seq_len fixes the original hard-coded 1:50 row vector; tokenization unchanged.
+ # Assign a row index to each survey response before tokenization.
  tokens<-tibble(line=seq_len(nrow(d)),text=as.character(d[[n]])) %>%
   unnest_tokens(word,text) %>% anti_join(tidytext::stop_words,by="word") %>% count(word,sort=TRUE)
  write.csv(tokens,file.path("outputs",paste0(n,"-word-counts.csv")),row.names=FALSE)
