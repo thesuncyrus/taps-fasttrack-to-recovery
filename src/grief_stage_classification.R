@@ -24,15 +24,15 @@ for(n in c("q1","q2")) {d[[n]]<-as.factor(d[[n]]);test[[n]]<-as.factor(test[[n]]
 descrCor <- cor(d[,4:21]);print(sum(abs(descrCor[upper.tri(descrCor)])>.85))
 nzv <- caret::nearZeroVar(d,saveMetrics=TRUE)
 d <- d[,c(TRUE,!nzv$zeroVar[2:ncol(d)])]
-# Range transforms are fitted before resampling and separately for the competition test set.
-pre <- caret::preProcess(d[,4:21],method="range");d <- predict(pre,d)
-test_pre <- caret::preProcess(test[,4:21],method="range");test <- predict(test_pre,test)
+# caret fits Yeo-Johnson and range transforms within resampling and reuses
+# the final training transforms when predict() receives new survey records.
 levels(d$y) <- make.names(levels(factor(d$y)))
 set.seed(111)
 ctrl <- caret::trainControl(method="LOOCV",classProbs=TRUE,
  summaryFunction=caret::multiClassSummary,allowParallel=TRUE)
 fit <- caret::train(y ~ q4+q5+q6+q7+q8+q9+q10+q11+q12+q13+q14+q15+q16+q17+q18+q19+q20,
- data=d,method=method,trControl=ctrl,metric="Accuracy")
+ data=d,method=method,trControl=ctrl,metric="Accuracy",
+ preProcess=c("YeoJohnson","range"))
 dir.create(out,recursive=TRUE,showWarnings=FALSE)
 write.csv(fit$results,file.path(out,"resampling-results.csv"),row.names=FALSE)
 # Source confusion matrix is training/resubstitution, not held-out accuracy.
@@ -40,4 +40,4 @@ cm <- caret::confusionMatrix(predict(fit,d),d$y)
 write.csv(as.data.frame(cm$table),file.path(out,"training-confusion.csv"),row.names=FALSE)
 write.csv(data.frame(Id=test$Id,label=predict(fit,test)),file.path(out,"kaggle-predictions.csv"),row.names=FALSE)
 saveRDS(fit,file.path(out,"model.rds"))
-writeLines(c(paste("Method:",method),"Range preprocessing; leave-one-out cross-validation.",capture.output(sessionInfo())),file.path(out,"run-info.txt"))
+writeLines(c(paste("Method:",method),"Yeo-Johnson and range preprocessing; leave-one-out cross-validation.",capture.output(sessionInfo())),file.path(out,"run-info.txt"))

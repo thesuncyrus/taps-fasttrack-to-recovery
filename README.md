@@ -6,7 +6,7 @@ Purdue University, September–November 2024. Partner: Tragedy Assistance Progra
 How can survey responses support classification into six grief-journey stages, and can fewer inputs preserve classification quality? The project compares structured prediction, text exploration and backward variable selection to support staff review.
 
 ## Methods
-The structured classifier uses q4–q20, range preprocessing and caret leave-one-out cross-validation with Accuracy selection. The method argument selects glmnet or Random Forest. The project poster identifies Random Forest with range and YeoJohnson preprocessing as the leading model; its full tuning configuration is not encoded by the default script. Text analysis separately covers language detection, optional translation, tokenization, stop-word removal and word frequencies.
+The structured classifier uses q4–q20, Yeo–Johnson and range preprocessing, and caret leave-one-out cross-validation with Accuracy selection. The method argument selects glmnet or Random Forest. The project poster identifies Random Forest with range and Yeo–Johnson preprocessing as the leading model. Text analysis separately covers language detection, optional translation, tokenization, stop-word removal and word frequencies.
 
 ## Results
 The project poster reports a best Random Forest Kaggle score of **0.889**, followed by 0.888. Selected text-mining variants score 0.812/0.815; variable-selection variants score 0.821/0.799. These are poster-reported competition scores, distinct from the script's training confusion matrix.
@@ -22,6 +22,6 @@ Rscript src/survey_text_exploration.R data/examples.csv
 ```
 Survey records are not included. Input requirements are in data/README.md. Translation requires an explicit opt-in flag because it sends text to an external translation service.
 
-Preprocessing is fitted before cross-validation and independently for the competition test set. The training confusion matrix is resubstitution, not held-out performance. The project demonstrates classification and workflow possibilities; it does not establish a measured operational improvement or clinical outcome.
+Preprocessing is fitted within each cross-validation training fold. For competition predictions, caret applies the final model's training transformations to the test records. The training confusion matrix is resubstitution, not held-out performance. The project demonstrates classification and workflow possibilities; it does not establish a measured operational improvement or clinical outcome.
 
 [Portfolio case study](https://chau-nguyen-research.gabledmango1.chatgpt.site/taps.html)
