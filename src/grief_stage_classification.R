@@ -3,13 +3,13 @@
 source("src/classification_helpers.R")
 args <- commandArgs(trailingOnly=TRUE)
 if(length(args)<2) stop("Usage: Rscript src/grief_stage_classification.R examples.csv test.xlsx [glmnet|rf] [outputs]")
-method <- if(length(args)>2) args[3] else "glmnet"
+method <- if(length(args)>2) args[3] else taps_config$default_method
 if(!method %in% c("glmnet","rf")) stop("Choose a model method: glmnet or rf.")
 out <- if(length(args)>3) args[4] else "outputs"
 for(pkg in c("caret","readxl","MLmetrics",if(method=="rf") "randomForest" else "glmnet"))
  if(!requireNamespace(pkg,quietly=TRUE)) stop(paste("Install",pkg))
 d <- read.table(args[1],header=TRUE,sep=",")
-test <- as.data.frame(readxl::read_xlsx(args[2],sheet="test",col_names=TRUE,range="A1:W2951"))
+test <- as.data.frame(readxl::read_xlsx(args[2],sheet=taps_config$test_sheet,col_names=TRUE,range=taps_config$test_range))
 if(!all(paste0("q",1:22) %in% names(d)) ||
    !all(c("Id",paste0("q",1:22)) %in% names(test))) stop("Unexpected survey schema.")
 d$Id <- NULL
@@ -26,10 +26,10 @@ numeric_items <- d[,paste0("q",3:20),drop=FALSE]
 varying <- vapply(numeric_items,function(x) length(unique(x[!is.na(x)]))>1,logical(1))
 if(sum(varying)>1) {
  descrCor <- cor(numeric_items[,varying,drop=FALSE])
- print(sum(abs(descrCor[upper.tri(descrCor)])>.85,na.rm=TRUE))
+ print(sum(abs(descrCor[upper.tri(descrCor)])>taps_config$correlation_diagnostic_cutoff,na.rm=TRUE))
 }
-set.seed(111)
-ctrl <- caret::trainControl(method="LOOCV",classProbs=TRUE,
+set.seed(taps_config$seed)
+ctrl <- caret::trainControl(method=taps_config$resampling,classProbs=TRUE,
  summaryFunction=caret::multiClassSummary,allowParallel=TRUE)
 fit <- fit_stage_classifier(d, method, ctrl)
 dir.create(out,recursive=TRUE,showWarnings=FALSE)
