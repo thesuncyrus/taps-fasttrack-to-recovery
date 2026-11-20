@@ -25,6 +25,6 @@ Run commands from the repository root. Survey records are not included. Input re
 
 `kaggle-predictions.csv` exports the original stage labels 1–6 and preserves test-record IDs. `label-map.csv` records their correspondence to the internal model labels X1–X6.
 
-Preprocessing is fitted within each cross-validation training fold. For competition predictions, caret applies the final model's training transformations to the test records. The training confusion matrix is resubstitution, not held-out performance. The project demonstrates classification and workflow possibilities; it does not establish a measured operational improvement or clinical outcome.
+Preprocessing is fitted within each cross-validation training fold. For competition predictions, caret applies the final model's training transformations to the test records. The script also reports a confusion matrix on the training data.
 
-[Portfolio case study](https://chau-nguyen-research.gabledmango1.chatgpt.site/taps.html)
+[Portfolio case study](https://thesuncyrus.github.io/taps.html)
